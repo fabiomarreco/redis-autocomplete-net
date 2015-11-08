@@ -17,14 +17,14 @@
 ---  key with the UNION of all available word for each prefix.
 --- ... continue...
 -----------------------------------------------------------------------------------
-Script em lua responsável por realizar uma busca por palavras chaves em 
----  alta performance para ser utilizado em ambiente de auto-complete
 
 
-local root = ARGS[1] --- 'SI'
-local arg = ARGS[2] --- '{ "prefixes": [ "marf", "a" ] }'
-local maxResult = ARGS[3] --- 15
-local cacheExpire = ARGS[4] --- 30 --sec
+local root = ARGV[1] --- 'SI'
+local arg = ARGV[2] --- '{ "prefixes": [ "marf", "a" ] }'
+--local arg =  '{ "prefixes": [ "marf", "a" ] }'
+
+local maxResult = ARGV[3] --- 15
+local cacheExpire = ARGV[4] --- 30 --sec
 
 -- Parse of all prefixes given as parameters
 local result = {}
@@ -69,9 +69,10 @@ if redis.call('EXISTS', resultSetKey) == 0 then
 		end
 	end
 	redis.call("SINTERSTORE", resultSetKey, unpack (prefixKeys))
+	redis.call('ZINTERSTORE', resultSetKey, 2, resultSetKey, root .. ':ITEMS', 'WEIGHTS', 0, 1)
 	redis.call('EXPIRE', resultSetKey, cacheExpire)
 end
 
-local scanResult = redis.call ('SSCAN', resultSetKey, 0, 'count', maxResult)
+local result = redis.call ('ZRANGEBYSCORE', resultSetKey, '-inf', '+inf', 'LIMIT', '0', maxResult)
 
-return scanResult[2]
+return result
