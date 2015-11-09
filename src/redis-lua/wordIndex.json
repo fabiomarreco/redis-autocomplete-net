@@ -1,0 +1,32 @@
+{
+	"vocabulary":
+	[ 
+		{
+			"letter": "a",
+			"words": ["a", "abacate", "abacaxi"]
+		},
+		{
+			"letter": "h",
+			"words": ["hello", "holland", "homer"]
+		},
+	],
+	"index":
+	[
+		{
+			"wd": "a",
+			"it": ["1", "10", "20"]
+		},
+		{
+			"wd": "abacate",
+			"it": ["10", "33"]
+		},
+		{
+			"wd": "homer",
+			"it": ["10", "44"]
+		}
+	],
+	"items":
+	[
+		{ "it": "10", "sc": "1" }
+	]
+}
