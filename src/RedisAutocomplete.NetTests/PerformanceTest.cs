@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net.Mime;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -69,16 +72,41 @@ namespace RedisAutocomplete.NetTests
 
         private static AutoCompleteItem[] LoadAllItems()
         {
-            var itens =
-                File.ReadAllLines(@"c:\temp\itens.csv", Encoding.Default)
-                    .Select(l => l.Split('\t'))
-                    .Select(x =>
-                        new AutoCompleteItem()
-                        {
-                            ItemKey = JsonConvert.SerializeObject(new { id = x[0], c = x[1] }), Priority = int.Parse(x[1]), Text = x[2]
-                        })
-                    .ToArray();
-            return itens;
+            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("RedisAutocomplete.NetTests.itens.zip");
+
+
+            GZipStream zipStream = new GZipStream(stream, CompressionMode.Decompress);
+            string[] lines;
+            var result = new List<AutoCompleteItem>();
+            using (StreamReader sr = new StreamReader(zipStream, Encoding.Default))
+            {
+                while (!sr.EndOfStream)
+                {
+                    var line = sr.ReadLine().Trim();
+                    var cols = line.Split('\t');
+                    var ac = new AutoCompleteItem()
+                    {
+                        ItemKey = JsonConvert.SerializeObject(new {id = cols[0].Trim(), c = cols[1].Trim()}),
+                        Priority = int.Parse(cols[1]),
+                        Text = cols[2]
+                    };
+
+                    result.Add(ac);
+                }
+            }
+
+
+            return result.ToArray();
+            //var itens =
+            //    File.ReadAllLines(@"c:\temp\itens.csv", Encoding.Default)
+            //        .Select(l => l.Split('\t'))
+            //        .Select(x =>
+            //            new AutoCompleteItem()
+            //            {
+            //                ItemKey = JsonConvert.SerializeObject(new { id = x[0], c = x[1] }), Priority = int.Parse(x[1]), Text = x[2]
+            //            })
+            //        .ToArray();
+            //return itens;
         }
     }
 }
