@@ -75,7 +75,7 @@ namespace RedisAutocomplete.NetTests
                     .Select(x =>
                         new AutoCompleteItem()
                         {
-                            Item = JsonConvert.SerializeObject(new { id = x[0], c = x[1] }), Priority = int.Parse(x[1]), Text = x[2]
+                            ItemKey = JsonConvert.SerializeObject(new { id = x[0], c = x[1] }), Priority = int.Parse(x[1]), Text = x[2]
                         })
                     .ToArray();
             return itens;

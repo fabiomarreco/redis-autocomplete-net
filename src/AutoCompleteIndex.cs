@@ -16,8 +16,6 @@ namespace RedisAutocomplete.Net
     public class RedisAutoCompleteIndex : IAutoCompleteIndex
     {
         private const int MAX_BATCH = 5000;
-
-        private readonly IDatabase _db;
         private readonly IRedisAutoCompleteProxy _proxy;
         private readonly string _rootPath;
         private readonly int _maxResultCount;
@@ -63,13 +61,13 @@ namespace RedisAutocomplete.Net
             {
                 batch.SortedSetAddAsync(string.Format("{0}:LT:{1}", _rootPath, witems.Key.Substring(0, 1)), witems.Key, 0);
                 foreach (var item in witems)
-                    batch.SetAddAsync(string.Format("{0}:WORDS:{1}", _rootPath, witems.Key), item.Item);
+                    batch.SetAddAsync(string.Format("{0}:WORDS:{1}", _rootPath, witems.Key), item.ItemKey);
             }
 
             batch.Execute();
             batch = _db.CreateBatch();
             foreach (var item in items)
-               batch.SortedSetAddAsync(string.Format("{0}:ITEMS", _rootPath), item.Item, item.Priority);
+               batch.SortedSetAddAsync(string.Format("{0}:ITEMS", _rootPath), item.ItemKey, item.Priority);
 
             batch.Execute();
             //return result;
@@ -84,8 +82,6 @@ namespace RedisAutocomplete.Net
                 from word in item.Text.ToLower().Split(_separadores).Select(s => s.Trim()).Where(s => s.Length > 0).Distinct()
                 group item by word).ToList();
 
-            var vocabulary = byWord.GroupBy(s => s.Key.Substring(0, 1), s => s.Key);
-
             var jsonObj = new
             {
                 vocabulary = from w in byWord
@@ -97,11 +93,11 @@ namespace RedisAutocomplete.Net
                         words = grpKey.ToArray()
                     },
                 index = from w in byWord
-                    select new {wd = w.Key, it = w.Select(s => s.Item).ToArray()},
+                    select new {wd = w.Key, it = w.Select(s => s.ItemKey).ToArray()},
                 items = from item in items
                     select new
                     {
-                        it = item.Item,
+                        it = item.ItemKey,
                         sc = item.Priority
                     }
             };

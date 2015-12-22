@@ -40,8 +40,8 @@ namespace RedisAutocomplete.Net.Tests
             index.Clear();
             var items = new[]
             {
-                new AutoCompleteItem() {Priority = 1, Text = "Hello World!", Item = "Item1"},
-                new AutoCompleteItem() {Priority = 2, Text = "Hello (Holland)", Item = "Item2"},
+                new AutoCompleteItem() {Priority = 1, Text = "Hello World!", ItemKey = "Item1"},
+                new AutoCompleteItem() {Priority = 2, Text = "Hello (Holland)", ItemKey = "Item2"},
             };
 
             index.Add(items).Wait();
@@ -88,9 +88,9 @@ namespace RedisAutocomplete.Net.Tests
             index.Clear();
             var items = new[]
             {
-                new AutoCompleteItem() {Priority = 1, Text = "Hello World!", Item = "Item1"},
-                new AutoCompleteItem() {Priority = 2, Text = "Hello (Holland)", Item = "Item2"},
-                new AutoCompleteItem() {Priority = 1, Text = "Hello Brazil!", Item = "Item3"},
+                new AutoCompleteItem() {Priority = 1, Text = "Hello World!", ItemKey = "Item1"},
+                new AutoCompleteItem() {Priority = 2, Text = "Hello (Holland)", ItemKey = "Item2"},
+                new AutoCompleteItem() {Priority = 1, Text = "Hello Brazil!", ItemKey = "Item3"},
             };
 
             index.Add(items).Wait();
@@ -122,9 +122,9 @@ namespace RedisAutocomplete.Net.Tests
             index.Clear();
             var items = new[]
             {
-                new AutoCompleteItem() {Priority = 1, Text = "Hello World!", Item = "Item1"},
-                new AutoCompleteItem() {Priority = 2, Text = "Hello (Holland)", Item = "Item2"},
-                new AutoCompleteItem() {Priority = 1, Text = "Hello Brazil!", Item = "Item3"},
+                new AutoCompleteItem() {Priority = 1, Text = "Hello World!", ItemKey = "Item1"},
+                new AutoCompleteItem() {Priority = 2, Text = "Hello (Holland)", ItemKey = "Item2"},
+                new AutoCompleteItem() {Priority = 1, Text = "Hello Brazil!", ItemKey = "Item3"},
             };
 
             index.Add(items);
