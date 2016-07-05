@@ -6,11 +6,10 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("RedisAutocomplete.Net")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Auto Complete Api using Redis")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Accenture")]
+[assembly: AssemblyCompany("Fabio Marreco")]
 [assembly: AssemblyProduct("RedisAutocomplete.Net")]
-[assembly: AssemblyCopyright("Copyright © Accenture 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +31,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyVersion("0.1.0.*")]
 [assembly: AssemblyFileVersion("1.0.0.0")]

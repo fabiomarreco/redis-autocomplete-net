@@ -75,7 +75,7 @@ namespace RedisAutocomplete.Net
             //return Task.FromResult(0);
         }
 
-        private string CreateInsert(AutoCompleteItem[] items)
+        private string CreateInsert(AutoCompleteItem[] items) 
         {
             
             var byWord = (from item in items

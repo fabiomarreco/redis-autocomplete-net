@@ -88,5 +88,45 @@ namespace RedisAutocomplete.Net.Tests
             Assert.AreEqual("Item2", result[0]);
             connection.Close();
         }
+
+
+
+        [TestMethod()]
+        public void SearchAzulTest()
+        {
+            string rootPath = "PROXYTEST";
+            string jsonParam = @"
+{
+	""index"": [
+		{""wd"":""arte"",""it"":[""Item1"",""Item2""]},
+		{""wd"":""aula"",""it"":[""Item1""]},
+		{""wd"":""azul"",""it"":[""Item3""]},
+		{""wd"":""bola"",""it"":[""Item2""]},
+		{""wd"":""casa"",""it"":[""Item2""]}
+	],
+	""items"":[
+		{""it"":""Item1"",""sc"":1},
+		{""it"":""Item2"",""sc"":2},
+		{""it"":""Item3"",""sc"":3}
+	]
+}";
+            var connection = new RedisTestConnector().Connect();
+            var db = connection.GetDatabase();
+            var proxy = new RedisAutoCompleteProxy(db);
+            proxy.Clear(rootPath);
+            proxy.InsertItems(rootPath, jsonParam).Wait();
+
+            var result = proxy.Search(rootPath, JsonConvert.SerializeObject(new { prefixes = new[] { "a" } }), 15, 10).Result;
+            Assert.AreEqual(3, result.Length);
+            Assert.IsTrue(result.Contains("Item1"));
+            Assert.IsTrue(result.Contains("Item2"));
+            Assert.IsTrue(result.Contains("Item3"));
+
+            result = proxy.Search(rootPath, JsonConvert.SerializeObject(new { prefixes = new[] { "az" } }), 15, 10).Result;
+            Assert.AreEqual(1, result.Length);
+            Assert.IsTrue(result.Contains("Item3"));
+
+            connection.Close();
+        }
     }
 }

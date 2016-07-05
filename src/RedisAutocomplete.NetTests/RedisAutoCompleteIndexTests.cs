@@ -36,7 +36,8 @@ namespace RedisAutocomplete.Net.Tests
 
 
             var index = new RedisAutoCompleteIndex(mqProxy.Object, rootPath);
-            //var index = new RedisAutoCompleteIndex(redis.GetDatabase(), rootPath);
+            //var redis = new RedisAutoCompleteProxy(new RedisTestConnector().Connect().GetDatabase());
+            //var index = new RedisAutoCompleteIndex(redis, rootPath);
             index.Clear();
             var items = new[]
             {

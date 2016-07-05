@@ -41,7 +41,7 @@ local function get_words(sword)
 	local c = sword:sub(1,1) -- Primeiro caractere
 	local key = root .. ':LT:' .. c
 	local sstart = '[' .. sword
-	local send = '(' .. sword .. 'z'
+	local send = '(' .. sword:sub(1,-2) .. string.char(string.byte(sword:sub(-1))+1)
 	--local words = redis.call('ZRANGEBYLEX', key, sstart, send, 'LIMIT', 0, maxResult)
 	local words = redis.call('ZRANGEBYLEX', key, sstart, send)
 	return words

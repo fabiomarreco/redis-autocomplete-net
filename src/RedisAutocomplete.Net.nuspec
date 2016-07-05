@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <projectUrl>https://github.com/fabiomarreco/redis-autocomplete-net</projectUrl>
+    <licenseUrl>https://opensource.org/licenses/MIT</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes>Latest Release.</releaseNotes>
+    <copyright>Copyright 2016</copyright>
+    <tags>Redis AutoComplete</tags>
+  </metadata>
+</package>
