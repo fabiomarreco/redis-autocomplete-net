@@ -83,7 +83,7 @@ namespace RedisAutocomplete.Net.Tests
             var redis = connector.Connect();
             string rootPath = "RedisAutoCompleteIndexBuilderTests";
 
-            var proxy = new RedisAutoCompleteProxy(redis.GetDatabase());
+            var proxy = new RedisAutoCompleteProxy(() => redis.GetDatabase());
             //var index = new RedisAutoCompleteIndex(redis.GetDatabase(), rootPath);
             var index = new RedisAutoCompleteIndex(proxy, rootPath);
             index.Clear();
@@ -116,7 +116,7 @@ namespace RedisAutocomplete.Net.Tests
             var redis = connector.Connect();
             string rootPath = "RedisAutoCompleteIndexBuilderTests";
 
-            var proxy = new RedisAutoCompleteProxy(redis.GetDatabase());
+            var proxy = new RedisAutoCompleteProxy(() => redis.GetDatabase());
             //var index = new RedisAutoCompleteIndex(redis.GetDatabase(), rootPath);
             var index = new RedisAutoCompleteIndex(proxy, rootPath);
             

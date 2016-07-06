@@ -31,7 +31,7 @@ namespace RedisAutocomplete.Net.Tests
 
             var connection = new RedisTestConnector().Connect();
             var db = connection.GetDatabase();
-            var proxy = new RedisAutoCompleteProxy(db);
+            var proxy = new RedisAutoCompleteProxy(() => db);
             proxy.Clear(rootPath);
             Assert.IsFalse(db.KeyExists("PROXYTEST:ITEMS"));
             proxy.InsertItems(rootPath, jsonParam).Wait();
@@ -78,8 +78,7 @@ namespace RedisAutocomplete.Net.Tests
 	]
 }";
             var connection = new RedisTestConnector().Connect();
-            var db = connection.GetDatabase();
-            var proxy = new RedisAutoCompleteProxy(db);
+            var proxy = new RedisAutoCompleteProxy(() => connection.GetDatabase());
             proxy.Clear(rootPath);
             proxy.InsertItems(rootPath, jsonParam).Wait();
 
@@ -111,8 +110,7 @@ namespace RedisAutocomplete.Net.Tests
 	]
 }";
             var connection = new RedisTestConnector().Connect();
-            var db = connection.GetDatabase();
-            var proxy = new RedisAutoCompleteProxy(db);
+            var proxy = new RedisAutoCompleteProxy(() => connection.GetDatabase());
             proxy.Clear(rootPath);
             proxy.InsertItems(rootPath, jsonParam).Wait();
 

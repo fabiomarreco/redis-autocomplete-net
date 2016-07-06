@@ -27,7 +27,7 @@ namespace RedisAutocomplete.NetTests
             var connection = new RedisTestConnector().Connect();
             try
             {
-                var proxy = new RedisAutoCompleteProxy(connection.GetDatabase());
+                var proxy = new RedisAutoCompleteProxy(() => connection.GetDatabase());
                 string root = "PERFORMANCETEST";
                 var index = new RedisAutoCompleteIndex(proxy, root);
                 index.Clear();

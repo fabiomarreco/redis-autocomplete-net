@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using StackExchange.Redis;
@@ -15,7 +16,7 @@ namespace RedisAutocomplete.Net
 
     public class RedisAutoCompleteProxy : IRedisAutoCompleteProxy
     {
-        private readonly IDatabase _db;
+        private readonly Func<IDatabase> _dbFactory;
 
         private string GetScript(string name)
         {
@@ -29,31 +30,35 @@ namespace RedisAutocomplete.Net
             }
         }
 
-        public RedisAutoCompleteProxy(IDatabase db)
+        public RedisAutoCompleteProxy(Func<IDatabase> dbFactory)
         {
-            _db = db;
+            _dbFactory = dbFactory;
         }
 
         public Task InsertItems(string rootPath, string jsonParameters)
         {
             string script = GetScript("addindex");
-            return _db.ScriptEvaluateAsync(script, new RedisKey[] {}, new RedisValue[] {rootPath, jsonParameters});
+            var db = _dbFactory();
+            return db.ScriptEvaluateAsync(script, new RedisKey[] {}, new RedisValue[] {rootPath, jsonParameters});
         }
 
         public Task<long> RemoveItems(string rootPath, RedisValue[] values)
         {
-            return _db.SortedSetRemoveAsync(rootPath + ":ITEMS", values);
+            var db = _dbFactory();
+            return db.SortedSetRemoveAsync(rootPath + ":ITEMS", values);
 
         }
 
         public Task IncreasePriority(string rootPath, string item)
         {
-            return _db.SortedSetIncrementAsync(rootPath + ":ITEMS", item, -1);
+            var db = _dbFactory();
+            return db.SortedSetIncrementAsync(rootPath + ":ITEMS", item, -1);
         }
 
         public Task Clear(string rootPath)
         {
-            return _db.ScriptEvaluateAsync(
+            var db = _dbFactory();
+            return db.ScriptEvaluateAsync(
 @"local keys = redis.call('keys', ARGV[1]) 
 for i=1,#keys,5000 do
 	redis.call('del', unpack(keys, i, math.min(i+4999, #keys))) 
@@ -65,9 +70,10 @@ return keys", new RedisKey[] { }, new RedisValue[] { rootPath + ":*" });
         public async Task<string[]> Search(string rootPath, string jsonTermList, int maxResultCount, long cacheExpire)
         {
             var script = GetScript("searchitems");
+            var db = _dbFactory();
             RedisResult result =
                 await
-                    _db.ScriptEvaluateAsync(script, new RedisKey[] {},
+                    db.ScriptEvaluateAsync(script, new RedisKey[] {},
                         new RedisValue[] {rootPath, jsonTermList, maxResultCount, cacheExpire});
 
             string[] items = (string[]) result;
